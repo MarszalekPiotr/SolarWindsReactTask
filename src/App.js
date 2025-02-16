@@ -117,15 +117,15 @@ function App() {
             <Table.Footer>
               <Table.Row>
                 <Table.HeaderCell colSpan="3">
-                  <Menu floated="right" pagination>
-                    <Menu.Item onClick={moveToPreviousPage} as="a" icon>
-                      <Icon name="chevron left" />
-                    </Menu.Item>
+                <Menu floated="right" pagination>
+                  <Menu.Item onClick={moveToPreviousPage} as="a" icon disabled={!previousPage}>
+                    <Icon name="chevron left" />
+                  </Menu.Item>
 
-                    <Menu.Item onClick={moveToNextPage} as="a" icon>
-                      <Icon name="chevron right" />
-                    </Menu.Item>
-                  </Menu>
+                  <Menu.Item onClick={moveToNextPage} as="a" icon disabled={!nextPage}>
+                    <Icon name="chevron right" />
+                  </Menu.Item>
+                </Menu>
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Footer>
