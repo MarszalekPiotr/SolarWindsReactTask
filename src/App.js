@@ -1,10 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
-import { Table, TableFooter, TableRow, TableHeaderCell, Menu, MenuItem, Icon } from "semantic-ui-react";
+import { Table, Menu, Icon, Dropdown, Container, Segment, Header } from "semantic-ui-react";
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
-import { Dropdown } from "semantic-ui-react";
-import "semantic-ui-css/semantic.min.css"; 
+import "semantic-ui-css/semantic.min.css";
 
 function App() {
   const [currentStatus, setCurrentStatus] = useState();
@@ -23,11 +22,11 @@ function App() {
   const [previousPage, setPreviousPage] = useState();
   const [nextPage, setNextPage] = useState();
 
-  const fetchCharacters = async (status) => { 
+  const fetchCharacters = async (status) => {
     try {
       let response = null;
       if (status !== null) {
-        response = await fetch(`https://rickandmortyapi.com/api/character/?status=${status}`); 
+        response = await fetch(`https://rickandmortyapi.com/api/character/?status=${status}`);
       } else {
         response = await fetch("https://rickandmortyapi.com/api/character");
       }
@@ -78,45 +77,44 @@ function App() {
   };
 
   return (
-    
- 
-      <div className="App">
-        <div style={{ padding: "20px" }}>
-          <h2>Character List</h2>
-          <Dropdown
-            placeholder="Select Status"
-            fluid
-            selection
-            options={statusOptions}
-            onChange={(e, { value }) => setCurrentStatus(value)}
-          />
-          <Table celled>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>Name</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.HeaderCell>Species</Table.HeaderCell>
-                <Table.HeaderCell>Gender</Table.HeaderCell>
-                <Table.HeaderCell>Related Image</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
+    <Container>
+      <Segment>
+        <Header as="h2" textAlign="center">Character List</Header>
+        <Dropdown
+          placeholder="Select Status"
+          fluid
+          selection
+          options={statusOptions}
+          onChange={(e, { value }) => setCurrentStatus(value)}
+          style={{ marginBottom: '20px' }}
+        />
+        <Table celled>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Name</Table.HeaderCell>
+              <Table.HeaderCell>Status</Table.HeaderCell>
+              <Table.HeaderCell>Species</Table.HeaderCell>
+              <Table.HeaderCell>Gender</Table.HeaderCell>
+              <Table.HeaderCell>Related Image   </Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
 
-            <Table.Body>
-              {listOfCharacters.map((character) => (
-                <Table.Row key={character.id} onClick={() => handleRowClick(character.id)} >
-                  <Table.Cell >{character.name}</Table.Cell>
-                  <Table.Cell>{character.status}</Table.Cell>
-                  <Table.Cell>{character.species}</Table.Cell>
-                  <Table.Cell>{character.gender}</Table.Cell>
-                  <Table.Cell>
-                    <img src={character.image} alt={character.name} />
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-            <Table.Footer>
-              <Table.Row>
-                <Table.HeaderCell colSpan="3">
+          <Table.Body>
+            {listOfCharacters.map((character) => (
+              <Table.Row key={character.id} onClick={() => handleRowClick(character.id)}>
+                <Table.Cell>{character.name}</Table.Cell>
+                <Table.Cell>{character.status}</Table.Cell>
+                <Table.Cell>{character.species}</Table.Cell>
+                <Table.Cell>{character.gender}</Table.Cell>
+                <Table.Cell>
+                  <img src={character.image} alt={character.name} style={{ width: '50px', height: '50px' }} />
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+          <Table.Footer>
+            <Table.Row>
+              <Table.HeaderCell colSpan="5">
                 <Menu floated="right" pagination>
                   <Menu.Item onClick={moveToPreviousPage} as="a" icon disabled={!previousPage}>
                     <Icon name="chevron left" />
@@ -126,13 +124,12 @@ function App() {
                     <Icon name="chevron right" />
                   </Menu.Item>
                 </Menu>
-                </Table.HeaderCell>
-              </Table.Row>
-            </Table.Footer>
-          </Table>
-        </div>
-      </div>
-
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Footer>
+        </Table>
+      </Segment>
+    </Container>
   );
 }
 

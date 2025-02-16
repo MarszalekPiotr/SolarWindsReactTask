@@ -1,48 +1,37 @@
-// src/pages/ProfilePage.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
-import { useEffect } from 'react';
-function CharacterDetails() {
-  // Access the userId parameter from the URL
-  const searchParams = new URLSearchParams(window.location.search);
-  let characterId;
-  characterId = searchParams.get('characterId');
-  
-const [details, setDetails] = useState(null);
-const [episodes,setEpisodes] = useState([]);
+import { Container, Segment, Header, Image, List } from 'semantic-ui-react';
 
- useEffect(() => {
-   fetchSingleCharacter(characterId);
- 
+function CharacterDetails() {
+  const searchParams = new URLSearchParams(window.location.search);
+  const characterId = searchParams.get('characterId');
+  
+  const [details, setDetails] = useState(null);
+  const [episodes, setEpisodes] = useState([]);
+
+  useEffect(() => {
+    fetchSingleCharacter(characterId);
   }, [characterId]);
 
-
-  
   const fetchSingleCharacter = async (id) => { 
     try {
-     
-     const response = await fetch(`https://rickandmortyapi.com/api/character/${id}`); 
-   
+      const response = await fetch(`https://rickandmortyapi.com/api/character/${id}`); 
       const json = await response.json();
-       setDetails(json);
-       
-      const episodeIds = json.episode.map(url => url.split('/').pop());
-      console.log(episodeIds,'epsids');
-  
-      const url = (`https://rickandmortyapi.com/api/episode/${episodeIds.join(',')}`);
-      const episodesResponse = await fetch(url);
-      const episodesJson = await episodesResponse.json();
+      setDetails(json);
       
-      console.log(episodesJson,'episodesJson');
+      const episodeIds = json.episode.map(url => url.split('/').pop());
+      console.log(episodeIds, 'epsids');
+
+      const episodesResponse = await fetch(`https://rickandmortyapi.com/api/episode/${episodeIds.join(',')}`);
+      const episodesJson = await episodesResponse.json();
       setEpisodes(Array.isArray(episodesJson) ? episodesJson : [episodesJson]);
-  
+
+      console.log(episodesJson, 'episodesJson');
       
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-
 
   const renderDetails = (details) => {
     const excludedKeys = ['location', 'origin', 'episode', 'image'];
@@ -66,8 +55,6 @@ const [episodes,setEpisodes] = useState([]);
     );
   };
 
-
-  
   const renderEpisodes = (episodes) => {
     if (!episodes || episodes.length === 0) {
       return <p>No episodes available.</p>;
@@ -79,36 +66,32 @@ const [episodes,setEpisodes] = useState([]);
 
     return (
       <div>
-        <p><strong>Episodes:</strong></p>
-        <ul>
+        <Header as="h3">Episodes:</Header>
+        <List>
           {episodes.map(episode => (
-            <li key={episode.id}>{episode.name}</li>
+            <List.Item key={episode.id}>{episode.name}</List.Item>
           ))}
-        </ul>
+        </List>
       </div>
     );
   };
+
   return (
-    <div>
-      <h2>Details of: {details?.name} </h2>
-      <img src={details?.image} alt={details?.name} />
-      {details ? (
-        <div>
-          {renderDetails(details)}
-        </div>
-      ) : (
-        <p>Loading...</p>
-      )}
-        <div>
-          {renderLocationAndOrigin(details)}
-        </div>      
-        <div>
-          
-          {renderEpisodes(episodes)}
-        </div>      
-
-
-    </div>
+    <Container>
+      <Segment>
+        <Header as="h2" textAlign="center">Details of: {details?.name}</Header>
+        <Image src={details?.image} alt={details?.name} size="medium" centered />
+        {details ? (
+          <Segment>
+            {renderDetails(details)}
+            {renderLocationAndOrigin(details)}
+            {renderEpisodes(episodes)}
+          </Segment>
+        ) : (
+          <p>Loading...</p>
+        )}
+      </Segment>
+    </Container>
   );
 }
 
